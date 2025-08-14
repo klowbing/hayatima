@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sen & Ben — Bizim Hikayemiz</title>
+  <meta name="description" content="Resimlerimiz, şiirler ve bizim şarkımızla romantik bir web sayfası." />
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0e0f12; --fg:#f6f7fb; --soft:#c3c7ff; --accent:#ff6b9a; --glass: rgba(255,255,255,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--fg);background:var(--bg)}
+    a{color:inherit}
+body {
+  background-image: url('image/beautiful-love-1920-x-1080-wallpaper-7cr21m1mh4a1u8cq.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+    /* Layout */
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .hero{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden}
+    .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 600px at 80% -10%,rgba(255,107,154,.18),transparent),radial-gradient(900px 500px at -10% 80%,rgba(195,199,255,.18),transparent)}
+    .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.6);transition:opacity 1s ease;}
+    .bg.hidden{opacity:0}
+
+    .glass{backdrop-filter:blur(12px);background:var(--glass);border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 40px rgba(0,0,0,.35);border-radius:24px}
+    .card{padding:28px 28px 22px}
+
+    .title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:.3px}
+    .subtitle{opacity:.85}
+
+    .chip{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);font-size:13px}
+
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .btn{cursor:pointer;border:0;padding:12px 16px;border-radius:14px;font-weight:600;transition:transform .12s ease,opacity .2s}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#ff928d);color:white}
+    .btn-ghost{background:rgba(255,255,255,.08);color:var(--fg);border:1px solid rgba(255,255,255,.16)}
+
+    /* Sections */
+    section{padding:60px 0}
+    h2{margin:0 0 10px;font-size:clamp(22px,3.4vw,34px)}
+    p.lead{opacity:.9;margin:0 0 20px}
+
+    /* Gallery */
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+    .photo{position:relative;overflow:hidden;border-radius:18px;aspect-ratio:4/5;background:#1a1c22}
+    .photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .photo:hover img{transform:scale(1.06)}
+
+    /* Poems carousel */
+    .poem{min-height:170px;position:relative}
+    .poem p{margin:0;opacity:.0;transform:translateY(8px);transition:opacity .6s ease, transform .6s ease}
+    .poem p.active{opacity:1;transform:none}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;place-items:center;z-index:60}
+    .lightbox.open{display:grid}
+    .lightbox img{max-width:min(92vw,1100px);max-height:86vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .lightbox .close{position:absolute;top:24px;right:24px}
+
+    /* Player */
+    .player{position:fixed;right:18px;bottom:18px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);padding:10px 12px;border-radius:16px;z-index:70}
+    .player button{all:unset;cursor:pointer;padding:10px;border-radius:12px;background:rgba(255,255,255,.1)}
+
+    /* Footer */
+    footer{opacity:.8;padding:30px 0 60px;text-align:center}
+
+    /* Utilities */
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .muted{opacity:.7}
+    .spacer{height:16px}
+    .center{text-align:center}
+    .hide{display:none}
+  </style>
+</head>
+<body>
+  <!-- ========= HERO ========= -->
+  <header class="hero" id="hero">
+    <div class="bg" id="bgA"></div>
+    <div class="bg hidden" id="bgB"></div>
+
+    <div class="container" style="position:relative; z-index:2;">
+      <div class="glass card">
+        <div class="row muted" style="margin-bottom:8px">
+          <span class="chip">💖 Bizim hikayemiz</span>
+          <span class="chip" id="countChip">📸 0 fotoğraf</span>
+          <span class="chip">🎵 bizim şarkımız</span>
+        </div>
+        <div class="title" id="title">Sen & Ben</div>
+        <div class="subtitle" id="subtitle">"Bugün de kalbim sende kaldı."</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="playBtn">▶︎ Şarkıyı Başlat</button>
+          <a class="btn btn-ghost" href="#galeri">📷 Galeriye in</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========= GALLERY ========= -->
+  <section id="galeri">
+    <div class="container">
+      <h2>Anılarımız</h2>
+      <p class="lead">Beraber çektiğimiz en sevdiğim kareler… 💑</p>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ========= POEMS ========= -->
+  <section id="siirler">
+    <div class="container">
+      <h2>Sana Küçük Notlar</h2>
+      <div class="poem" id="poemBox"></div>
+      <div class="spacer"></div>
+      <div class="row muted">
+        <small>Otomatik geçiş • </small>
+        <button class="btn btn-ghost" id="prevPoem">⟵ Geri</button>
+        <button class="btn btn-ghost" id="nextPoem">İleri ⟶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= LIGHTBOX ========= -->
+  <div class="lightbox" id="lightbox" aria-modal="true" role="dialog">
+    <button class="btn btn-primary close" id="closeLb">✕ Kapat</button>
+    <img id="lbImg" alt="Fotoğraf"/>
+  </div>
+
+  <!-- ========= AUDIO PLAYER ========= -->
+  <div class="player" id="player">
+    <button id="togglePlay">▶︎</button>
+    <div>
+      <div style="font-weight:700">Bizim Şarkımız</div>
+      <small class="muted" id="songName">Şarkı adı</small>
+    </div>
+    <input id="progress" type="range" min="0" max="100" value="0" style="width:160px"/>
+    <audio id="audio" preload="auto"></audio>
+  </div>
+
+  <footer class="container">
+    <div class="center muted">  Kalbini krımak istemedim, şimdi tek dileğim onu hak etmek.  </div>
+  </footer>
+
+  <script>
+    // ================== AYARLAR ==================
+    // Buraya kendi fotoğraflarınızın yollarını ekleyin. (site klasörünüzde /images/ dizini açın)
+    const IMAGES = [
+      'image/WhatsApp Görsel 2025-08-14 saat 02.26.21_60bf11aa.jpg',
+      'image/WhatsApp Görsel 2025-08-14 saat 02.28.01_96ca708c.jpg',
+      'image/WhatsApp Görsel 2025-08-14 saat 02.28.44_2b42a189.jpg',
+      'image/WhatsApp Görsel 2025-08-14 saat 02.29.21_4216c2c5.jpg',
+      'image/WhatsApp Görsel 2025-08-14 saat 02.30.21_f96c3ae7.jpg',
+    ];
+
+    // Şarkı dosyası (site klasörünüzde /music/ dizini açıp mp3 koyun)
+    const SONG = { src: 'music/Bir Rüya Gördüm - Elif Doğan [Bve_6R7rbj8].mp3', title: 'Bizim Şarkımız' };
+
+    // Başlık / alt başlık (istersen değiştir)
+    const COUPLE_TITLE = 'Emirhan ❤️ İclal';
+    const COUPLE_SUBTITLE = '"Mutluluk sebebim"';
+
+    // Şiirler / notlar — istediğin kadar ekle
+    const POEMS = [
+      'Biliyorum seni hep kırıyorum.',
+      'seni kendimden bazen uzaklaştırıyor, güvenini kırabiliyorum.',
+      'seni kaybetmekten çok korkuyorum.',
+      'Ama bildiğim bir şey var ki.',
+      'Seni çok seviyorum... ❤️'
+    ];
+
+    // ================== UYGULAMA ==================
+    const bgA = document.getElementById('bgA');
+    const bgB = document.getElementById('bgB');
+    const grid = document.getElementById('grid');
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const closeLb = document.getElementById('closeLb');
+    const audio = document.getElementById('audio');
+    const togglePlay = document.getElementById('togglePlay');
+    const progress = document.getElementById('progress');
+    const songName = document.getElementById('songName');
+    const playBtn = document.getElementById('playBtn');
+    const countChip = document.getElementById('countChip');
+    const poemBox = document.getElementById('poemBox');
+    const prevPoem = document.getElementById('prevPoem');
+    const nextPoem = document.getElementById('nextPoem');
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+
+    
+    title.textContent = COUPLE_TITLE;
+    subtitle.textContent = COUPLE_SUBTITLE;
+
+  
+    audio.src = SONG.src; songName.textContent = SONG.title;
+
+    
+    function startMusic(){ audio.play().catch(()=>{}); }
+    playBtn.addEventListener('click', ()=>{ startMusic(); playBtn.textContent = '❤ Dinleniyor'; });
+
+    // Player
+    togglePlay.addEventListener('click', ()=>{
+      if(audio.paused){ audio.play(); } else { audio.pause(); }
+    });
+    audio.addEventListener('play', ()=> togglePlay.textContent='⏸︎');
+    audio.addEventListener('pause', ()=> togglePlay.textContent='▶︎');
+    audio.addEventListener('timeupdate', ()=>{
+      if(!isNaN(audio.duration)) progress.value = Math.floor(audio.currentTime / audio.duration * 100);
+    });
+    progress.addEventListener('input', ()=>{
+      if(!isNaN(audio.duration)) audio.currentTime = progress.value/100 * audio.duration;
+    });
+
+    // Galeri oluştur
+    function buildGallery(){
+      grid.innerHTML = '';
+      IMAGES.forEach((src, i)=>{
+        const a = document.createElement('a');
+        a.href = src; a.className='photo'; a.title=`Fotoğraf ${i+1}`;
+        const img = document.createElement('img'); img.loading='lazy'; img.src = src; img.alt = `Fotoğraf ${i+1}`;
+        a.appendChild(img);
+        a.addEventListener('click', (e)=>{ e.preventDefault(); openLightbox(src); });
+        grid.appendChild(a);
+      });
+      countChip.textContent = `📸 ${IMAGES.length} fotoğraf`;
+    }
+
+    // Lightbox
+    function openLightbox(src){ lbImg.src = src; lb.classList.add('open'); }
+    function closeLightbox(){ lb.classList.remove('open'); }
+    closeLb.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLightbox(); });
+
+    // Arka plan slayt (hero)
+    let bgIdx = 0, swap = false;
+    function setBg(div, src){ div.style.backgroundImage = `url('${src}')`; }
+    function rotateBg(){
+      if(IMAGES.length===0) return;
+      const next = IMAGES[bgIdx % IMAGES.length];
+      if(!swap){ setBg(bgB, next); bgB.classList.remove('hidden'); bgA.classList.add('hidden'); }
+      else { setBg(bgA, next); bgA.classList.remove('hidden'); bgB.classList.add('hidden'); }
+      swap = !swap; bgIdx++;
+    }
+
+    // Şiirler
+    let poemIndex = 0;
+    function showPoem(i){
+      poemBox.innerHTML = '';
+      const p = document.createElement('p');
+      p.textContent = POEMS[i % POEMS.length];
+      poemBox.appendChild(p);
+      requestAnimationFrame(()=> p.classList.add('active'));
+    }
+    prevPoem.addEventListener('click', ()=>{ poemIndex = (poemIndex - 1 + POEMS.length) % POEMS.length; showPoem(poemIndex); });
+    nextPoem.addEventListener('click', ()=>{ poemIndex = (poemIndex + 1) % POEMS.length; showPoem(poemIndex); });
+
+    // Başlat
+    buildGallery();
+    if(IMAGES.length){ setBg(bgA, IMAGES[0]); }
+    showPoem(0);
+
+    // Döngüler
+    setInterval(rotateBg, 5000);
+    setInterval(()=>{ nextPoem.click(); }, 6000);
+  </script>
+
+  <!--
+  ===================== KURULUM NOTLARI =====================
+  1) Aynı klasöre bu dosyayı kaydedin: index.html
+  2) index.html ile aynı seviyede iki klasör oluşturun: /images ve /music
+  3) Fotoğraflarınızı /images içine 1.jpg, 2.jpg ... şeklinde koyun
+     ve yukarıdaki IMAGES dizisini buna göre güncelleyin.
+  4) Şarkı mp3 dosyanızı /music içine koyup SONG.src yolunu güncelleyin.
+  5) Çoğu tarayıcı otomatik çalmayı engeller. Sayfayı açınca "Şarkıyı Başlat" butonuna tıklayın.
+  6) Başlığı ve alıntıyı COUPLE_TITLE / COUPLE_SUBTITLE ile değiştirin.
+  ============================================================
+  -->
+</body>
+</html>
